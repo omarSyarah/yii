@@ -144,7 +144,9 @@ class Post extends \yii\db\ActiveRecord
 //            die();
             return true;
         }
-        //else return true;
+
+
+        return true;
         //if we add the commented above the update statement works just fine
 
     }
