@@ -27,7 +27,14 @@ $this->params['breadcrumbs'][] = $this->title;
 
             'id',
             'name',
-            'status',
+            [                                                  // the owner name of the model
+                'label' => 'Status',
+                'value' => function($model)
+                {
+                    return \common\Status::getCityStatus($model->status);
+                },
+
+            ],
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, City $model, $key, $index, $column) {

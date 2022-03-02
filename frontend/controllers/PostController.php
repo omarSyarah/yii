@@ -187,8 +187,10 @@ class PostController extends Controller
     {
 //            var_dump('hello');
 //            die();
-        $model=new Model();
+//        $model=new Model();
+
         $models=Model::find()->where(['make_id' => $makeId])->all();
+
 //        print_r($models);
 //        print_r(JSON::encode($models));
 //        print_r(json_encode($models));

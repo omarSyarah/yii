@@ -52,7 +52,7 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
 //        'filterModel' => $searchModel,
-   // 'toolbar'=>[$export],
+//        'toolbar'=>[$export],
         'columns' => [
             ['class' => 'kartik\grid\SerialColumn'],
 

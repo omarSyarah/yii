@@ -127,31 +127,25 @@ class Post extends \yii\db\ActiveRecord
         }
     }
 
-
-
     public function beforeSave($insert)
     {
-        parent::beforeSave($insert);
 //        var_dump($insert);
 //        die();
-
-
-        if ($insert)
+        if (!parent::beforeSave($insert))
         {
-            //if $insert says we are CREATING , do concatenation here
+            return false;
+        }
+        if($insert)
+        {
+            //$insert true says we are CREATING , do concatenation here
             $this->title=$this->title." ".$this->make->name." ".$this->model->name;
 
 //            var_dump($this->title);
 //            die();
-
-
             return true;
         }
-        else
-        {
-            //if $insert says we are UPDATING do some functionality here
-            return true;
-        }
+        //else return true;
+        //if we add the commented above the update statement works just fine
 
     }
 

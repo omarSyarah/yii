@@ -25,7 +25,6 @@ $this->params['breadcrumbs'][] = $this->title;
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
         'columns' => [
-//            $is_new_id='is_new';
             ['class' => 'yii\grid\SerialColumn'],
 
             'id',
@@ -43,6 +42,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'city_id',
                 'value'=>'city.name'
             ],
+            //            $is_new_id='is_new';
             [
             'attribute'=>'is_new',
             'value'=>function ($data) {
@@ -51,9 +51,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 return  Post::getPostNewness($data->is_new);
             }
             ],
-//        -----------
-//        add is new here
-//        -----------
+
 
             [
                 'label'=>'status',
@@ -68,7 +66,6 @@ $this->params['breadcrumbs'][] = $this->title;
             //'updated_at',
             //'created_by',
             //'updated_by',
-//            no clue as what the above is commented for
             [
                 'class' => ActionColumn::className(),
                 'urlCreator' => function ($action, Post $model, $key, $index, $column) {
