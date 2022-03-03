@@ -6,6 +6,8 @@ namespace frontend\controllers;
 use common\models\Make;
 use common\models\Model;
 use common\models\Post;
+use common\models\User;
+use Yii;
 use yii\data\ActiveDataProvider;
 use common\models\PostSearch;
 use yii\web\Controller;
@@ -140,11 +142,33 @@ class PostController extends Controller
      * @return string|\yii\web\Response
      * @throws NotFoundHttpException if the model cannot be found
      */
+
+    public function sendEmail($userEmail,$postId,$postTitle)
+    {
+        Yii::$app->mailer->compose()
+            ->setFrom('bla@bla.com')
+            ->setTo($userEmail)
+            ->setSubject('Status has been changed to INACTIVE')
+            ->setTextBody(' Post id: '.$postId.'  and Title is : '.$postTitle)
+            ->setHtmlBody('<b>HTML content</b>')
+            ->send();
+    }
     public function actionUpdate($id)
     {
         $model = $this->findModel($id);
+        $status_before_update=$model->status;
+        $model->setScenario('update');
+
+        $userEmail=User::findOne($model->created_by)->email;
+        $postId=$model->id;
+        $postTitle=$model->title;
 
         if ($this->request->isPost && $model->load($this->request->post()) && $model->save()) {
+            if($model->status==0 && $model->status!=$status_before_update)
+            {
+                $this->sendEmail($userEmail,$postId,$postTitle);
+            }
+
             return $this->redirect(['view', 'id' => $model->id]);
         }
 

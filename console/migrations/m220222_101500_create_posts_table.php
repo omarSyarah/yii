@@ -30,7 +30,7 @@ class m220222_101500_create_posts_table extends Migration
             'created_at' => $this->dateTime(),
             'updated_at' => $this->dateTime(),
             'created_by' => $this->integer(),
-            'updated_by' => $this->dateTime(),
+            'updated_by' => $this->integer(),
         ]);
 
         // creates index for column `make_id`

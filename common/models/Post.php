@@ -27,7 +27,7 @@ use yii\db\ActiveRecord;
  */
 class Post extends \yii\db\ActiveRecord
 {
-//    const SCENARIO_UPDATE = 'update';
+    const SCENARIO_UPDATE = 'update';
     const SCENARIO_CREATE = 'create';
 
     //this function is used to specify THE DEFAULT SCENARIO
@@ -35,19 +35,19 @@ class Post extends \yii\db\ActiveRecord
     public function scenarios()
     {
         $scenarios = parent::scenarios();
-//        $scenarios[self::SCENARIO_UPDATE] =
-//            [
-//                'title',
-//                'price',
-//                'make_id',
-//                'model_id',
-//                'city_id',
-//                'status',
-//                'created_at',
-//                'updated_at',
-//                'created_by',
-//                'updated_by'
-//            ];
+        $scenarios[self::SCENARIO_UPDATE] =
+            [
+                'title',
+                'price',
+                'make_id',
+                'model_id',
+                'city_id',
+                'status',
+                'created_at',
+                'updated_at',
+                'created_by',
+                'updated_by'
+            ];
         $scenarios[self::SCENARIO_CREATE] =// i MUST specify all atrributes for the scenario
             [                              //because if i didnt specify it doesnt check the default scenario
                 'title',
@@ -103,6 +103,7 @@ class Post extends \yii\db\ActiveRecord
         return [
             [['title', 'make_id', 'model_id', 'city_id','price','status'], 'required'],
             [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_CREATE],
+            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_UPDATE],
 
             [['make_id', 'model_id', 'city_id', 'status', 'created_by','price'], 'integer'],
             [['created_at', 'updated_at','is_new'], 'safe'],
@@ -147,7 +148,6 @@ class Post extends \yii\db\ActiveRecord
 
 
         return true;
-        //if we add the commented above the update statement works just fine
 
     }
 
