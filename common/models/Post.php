@@ -24,6 +24,7 @@ use yii\db\ActiveRecord;
  * @property int $city_id
  * @property int|null $status
  * @property int|null $is_new
+ * @property string $image
  * @property string $created_at
  * @property string $updated_at
  * @property int $created_by
@@ -31,6 +32,9 @@ use yii\db\ActiveRecord;
  */
 class Post extends \yii\db\ActiveRecord
 {
+//    public $image;
+
+
     const SCENARIO_UPDATE = 'update';
     const SCENARIO_CREATE = 'create';
 
@@ -61,6 +65,7 @@ class Post extends \yii\db\ActiveRecord
                 'city_id',
                 'status',
                 'is_new',//this is different
+                'image',
                 'created_at',
                 'updated_at',
                 'created_by',
@@ -105,15 +110,15 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'make_id', 'model_id', 'city_id','price','status'], 'required'],
-            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_CREATE],
-            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_UPDATE],
+            [['title', 'make_id', 'model_id', 'city_id','price','status','image'], 'required'],
+            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status','image'], 'required','on'=>self::SCENARIO_CREATE],
+            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status','image'], 'required','on'=>self::SCENARIO_UPDATE],
 
             [['make_id', 'model_id', 'city_id', 'status', 'created_by','price'], 'integer'],
             [['created_at', 'updated_at','is_new'], 'safe'],
             [['is_new'],'integer'],
             ['is_new','checkPrice'],
-            [['title'], 'string', 'max' => 255],
+            [['title','image'], 'string', 'max' => 255],
             [['city_id'], 'exist', 'skipOnError' => true, 'targetClass' => City::className(), 'targetAttribute' => ['city_id' => 'id']],
             [['make_id'], 'exist', 'skipOnError' => true, 'targetClass' => Make::className(), 'targetAttribute' => ['make_id' => 'id']],
             [['model_id'], 'exist', 'skipOnError' => true, 'targetClass' => Model::className(), 'targetAttribute' => ['model_id' => 'id']],
@@ -171,6 +176,7 @@ class Post extends \yii\db\ActiveRecord
             'city_id' => 'City ID',
             'is_new'=>'Is New',
             'status' => 'Status',
+            'image'=>'Image',
             'created_at' => 'Created At',
             'updated_at' => 'Updated At',
             'created_by' => 'Created By',

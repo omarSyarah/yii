@@ -88,6 +88,15 @@ class ApiController extends controller
    public function actionCreate($title,$price,$make_id,$model_id,$city_id,$status,$is_new)
    {
        $post=new Post();
+       $image=\yii\web\UploadedFile::getInstanceByName ( 'image' );
+if(is_object($image))
+{
+    $imageName=time()."_".uniqid().".".$image->extension;
+    $imageDir='/var/www/html/yii/frontend/images';
+    $image->saveAs($imageDir.'/'.$imageName);
+}
+//return $imageName;
+
        $post->title=$title;
        $post->price=$price;
        $post->make_id=$make_id;
@@ -95,11 +104,13 @@ class ApiController extends controller
        $post->city_id=$city_id;
        $post->status=$status;
        $post->is_new=$is_new;
-       if($post->save())
+       $post->image=$imageName;
+       if($post->save() && is_object($image))
        {
            $response=[
                "success"=>true,
                "message"=>"post created successfully ",
+               "image"=>$imageName,
                "errors"=>[],
 
 
