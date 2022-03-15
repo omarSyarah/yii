@@ -29,7 +29,7 @@ $statuses = Status::getAllPostStatus();
     ) ?>
 
     <?= $form->field($model, 'model_id')->dropDownList(
-
+        ArrayHelper::map(\common\models\Model::find()->all(),'id','name'),
         [ 'prompt'=>'Select']
     ) ?>
 

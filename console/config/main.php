@@ -23,6 +23,18 @@ return [
           ],
     ],
     'components' => [
+        'mailer' => [
+            'class' => 'yii\swiftmailer\Mailer',
+            'useFileTransport' => false,
+            'transport' => [
+                'class' => 'Swift_SmtpTransport',
+                'host' => 'smtp.mailtrap.io',
+                'username' => '3c67cf7395d013',
+                'password' => 'a75f84eb17ed86',
+                'port' => '2525',
+                'encryption' => 'tls',
+            ],
+        ],
         'log' => [
             'targets' => [
                 [

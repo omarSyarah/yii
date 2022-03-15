@@ -7,6 +7,7 @@ use common\models\Make;
 use common\models\Model;
 use common\models\Post;
 use common\models\User;
+use common\models\View;
 use Yii;
 use yii\data\ActiveDataProvider;
 use common\models\PostSearch;
@@ -17,6 +18,10 @@ use common\status;
 use yii\behaviors\BlameableBehavior;
 use yii\helpers\Json;
 use kartik\mpdf\Pdf;
+use yii\mongodb\Query;
+
+
+
 
 
 
@@ -51,6 +56,8 @@ class PostController extends Controller
      */
     public function actionIndex()
     {
+
+
         $dataProvider = new ActiveDataProvider([
             'query' => Post::find(),
 
@@ -79,7 +86,6 @@ class PostController extends Controller
 //        var_dump($this->request->queryParams);
         $searchModel = new PostSearch();
         $dataProvider = $searchModel->search($this->request->queryParams);
-
 //        echo "<pre>";
 //        print_r($dataProvider);
 //        echo "<br>";
@@ -88,6 +94,7 @@ class PostController extends Controller
 
 //        print_r($searchModel->erros);
 //        die;
+
         return $this->render('search', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
@@ -100,13 +107,123 @@ class PostController extends Controller
      * @return string
      * @throws NotFoundHttpException if the model cannot be found
      */
+    public function addView($id)
+    {
+        // phpinfo();die;
+        $view=View::find()->where(["post_id"=>(int)$id])->one();
+//var_dump($view);die();
+//        print_r(View::find()->all());die;
+        if($view)
+        {
+            $view->view_num=$view->view_num+1;
+            $view->save();
+//            var_dump($view);die;
+
+
+        }
+        else
+        {
+            $view=new View();
+            $view->post_id=$id;
+            $view->view_num=1;
+            $view->save();
+//            var_dump($view);die;
+        }
+//        $model=$this->findModel($id);
+//        var_dump($model->view->view_num);
+//        die();
+
+    }
+
+    public function viewNumber($id)
+    {
+        return View::find()->where(["post_id"=>$id])->one()->view_num;
+    }
+
+
+
+
     public function actionView($id)
     {
+//        echo phpinfo()    ;
+//        die();
+//        // phpinfo();die;
+//         $view=View::find()->where(["post_id"=>$id])->count();
+//         echo $view;
+//        print_r(View::find()->all());die;
+
+//        $viewNum=Post::find()->with("view")->where(["post_id"=>$id])->all() ;
+
+//        var_dump($viewNum);
+//        die();
+
+        $this->addView($id);
+
+
+       // $view_num=$this->viewNumber($id);
+
+//        $cache = Yii::$app->cache;
+//
+////        echo "</pre>";
+////        var_dump($id);
+////        die();
+//        //
+//        $key=$id;
+//        $data=$cache->get($key);
+////        $data=unserialize($data);
+//        var_dump($data);
+//        if($data == false)
+//        {
+//            echo 'from db';
+//            $data = Post::find()->where(["id"=>$id])->one();
+////            var_dump($data);
+////            die();
+//
+////            var_dump($data->title);die();
+////            $se_data=$data;
+////            var_dump(serialize(NULL));die();
+//          echo  $cache->set($key,$data,60*5);die;
+//
+////            $cache->set($key,"hello");
+////            var_dump($cache->get($key));
+////
+////            die();
+//        } else {
+//            echo 'from cache';
+//        }
+////        else {
+////            $data = json_decode($data);
+////           // var_dump($data);die();
+////        }
+////echo var_dump($model->view);die;
+//        die;
+
+        $data=$this->findModel($id);
+//        $view_num=$this->viewNumber($id);
+//        var_dump($data);die();
+
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $data,
+//            'view_num'=>$view_num
         ]);
     }
 
+    public function dynamicFile($id)
+    {
+        //is_dir to check if a directory(folder0 is created
+        //is_file to check if the file is created
+        if(is_file(dirname(__DIR__).'/mail/'.$id))
+        {
+           return dirname(__DIR__).'/mail/'.$id.'.pdf'  ;
+        }
+        else
+        {
+            touch(dirname(__DIR__).'/mail/'.$id.'.pdf' );
+           return dirname(__DIR__) . '/mail/' . $id.'.pdf';
+        }
+
+        // setup kartik\mpdf\Pdf component
+    }
     public function actionReport($id)
     {
 // var_dump($id);
@@ -122,15 +239,17 @@ class PostController extends Controller
 
 //        var_dump($content);
 //        die();
+
 //        Yii::$app->response->format = \yii\web\Response::FORMAT_RAW;
 //        $formatter = \Yii::$app->formatter;
 
-        // setup kartik\mpdf\Pdf component
-        $filename='@frontend/mail/test.pdf'   ;
+          $filename=$this->dynamicFile($id);
+//        $filename='@frontend/mail/test.pdf'   ;
         $pdf = new Pdf([
-            // set to use core fonts only
+
 
             'filename'=>$filename,
+            // set to use core fonts only
             'mode' => Pdf::MODE_CORE,
             // A4 paper format
             'format' => Pdf::FORMAT_A4,
@@ -156,6 +275,9 @@ class PostController extends Controller
         $pdf->output($pdf->content,$filename,\Mpdf\Output\Destination::FILE);
         // return the pdf output as per the destination setting
 //        return $pdf->render();
+        return $this->render('view', [
+            'model' => $this->findModel($id),
+        ]);
     }
 
     /**
@@ -165,8 +287,6 @@ class PostController extends Controller
      */
     public function actionCreate()
     {
-
-
         $model = new Post();
         $model->setScenario('create');
         $models=Model::find()->all();
@@ -253,7 +373,10 @@ class PostController extends Controller
      */
     protected function findModel($id)
     {
-        if (($model = Post::findOne(['id' => $id])) !== null) {
+//        var_dump($id);die();
+        if (($model = Post::find()->where(['id'=>$id])->one()) !== null) {
+//            var_dump($model = Post::find()->where(['id'=>$id])->one());
+//            die();
             return $model;
         }
 

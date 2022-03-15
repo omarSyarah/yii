@@ -1,5 +1,6 @@
 <?php
 
+use common\models\View;
 use yii\helpers\Html;
 use yii\helpers\Url;
 use yii\grid\ActionColumn;
@@ -9,6 +10,8 @@ use common\models\Post;
 
 /* @var $this yii\web\View */
 /* @var $dataProvider yii\data\ActiveDataProvider */
+/* @var $view_num common\models\View */
+
 
 $this->title = 'Posts';
 $this->params['breadcrumbs'][] = $this->title;
@@ -61,6 +64,22 @@ $this->params['breadcrumbs'][] = $this->title;
 //                    die();
                     return (new common\Status)->getPostStatus($data->status); // $data['name'] for array data, e.g. using SqlDataProvider.
                 },
+            ],
+            [
+                 'label'=>'views',
+                 'value'=>function($data){
+
+
+//                     $post_id="".$data->id;
+                    //th line above to transfer from int to string
+//                     $view=View::find()->where(["post_id"=>$post_id])->one();
+                    if($data->view)
+                        return $data->view->view_num;
+//                     var_dump($view_num);
+//                     die();
+                     else
+                         return 0;
+                 },
             ],
             //'created_at',
             //'updated_at',

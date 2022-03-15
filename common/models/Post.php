@@ -8,6 +8,10 @@ use yii\behaviors\TimestampBehavior;
 
 use Yii;
 use yii\db\ActiveRecord;
+//use yii\mongodb\ActiveRecord;
+//the line above is commented because i don't know for fact
+//that if it is uncommented he will be able to determin wich is
+//for mongo and which is for yii
 
 /**
  * This is the model class for table "{{%posts}}".
@@ -197,30 +201,36 @@ class Post extends \yii\db\ActiveRecord
     {
         return $this->hasOne(City::className(), ['id' => 'city_id']);
     }
-
-    public function behaviors()
+    public function getView()
     {
-        return [
+        return $this->hasOne(View::className(), ['post_id' => 'id']);
+//        return $this->hasOne(View::className(), ['id' => 'post_id']);
 
-
-                    [
-                     'class'=>  BlameableBehavior::class,
-                     ]
-                    ,
-
-                    'timestamp' => [
-                        'class' => TimestampBehavior::className(),
-                        'attributes' => [
-                                        ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
-                                        ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
-                                                    ],
-                                        'value' => function() { return date('Y-m-d h:i:s'); },
-                                        ],
-                                    ]
-
-
-                                ;
     }
+//the mongo db had problem with the using the active record relationship when the behavior is uncommented
+//    public function behaviors()
+//    {
+//        return [
+//
+//
+//                    [
+//                     'class'=>  BlameableBehavior::class,
+//                     ]
+//                    ,
+//
+//                    'timestamp' => [
+//                        'class' => TimestampBehavior::className(),
+//                        'attributes' => [
+//                                        ActiveRecord::EVENT_BEFORE_INSERT => 'created_at',
+//                                        ActiveRecord::EVENT_BEFORE_UPDATE => 'updated_at',
+//                                                    ],
+//                                        'value' => function() { return date('Y-m-d h:i:s'); },
+//                                        ],
+//                                    ]
+//
+//
+//                                ;
+//    }
 
 
 }

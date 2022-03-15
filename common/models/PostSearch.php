@@ -2,10 +2,11 @@
 
 namespace common\models;
 
+use common\models\Post;
+use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
 use yii\db\ActiveRecord;
-use common\models\Post;
 use common\Status;
 
 /**
@@ -46,8 +47,12 @@ class PostSearch extends Post
      *
      * @return ActiveDataProvider
      */
+
+
     public function search($params)
     {
+
+//        $query=$this->cacheIt($params);
         $query = Post::find();
 
         // add conditions that should always apply here

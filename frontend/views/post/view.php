@@ -5,6 +5,7 @@ use yii\widgets\DetailView;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Post */
+/* @var $view_num common\models\View */
 
 $this->title = $model->title;
 $this->params['breadcrumbs'][] = ['label' => 'Posts', 'url' => ['index']];
@@ -59,8 +60,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label' => 'Status',
                 'value' => function($model)
                 {
+
                     return \common\Status::getPostStatus($model->status);
                 },
+
+            ],
+            [
+                    'views',
+                    'label'=>'views',
+                    //'value'=>$view_num ,
+//                    'value'=>function($model){
+//                    var_dump($model->view);
+//                    die();
+//                    },
+                    'value'=>$model->view->view_num
+
 
             ],
             'created_at',
