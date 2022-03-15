@@ -3,6 +3,7 @@
 namespace frontend\controllers;
 
 use common\models\Post;
+use http\Message;
 use Yii;
 use yii\data\ActiveDataProvider;
 use yii\data\Pagination;
@@ -73,7 +74,15 @@ class ApiController extends controller
 //         $posts=Post::find()->asArray()->all();
 //         var_dump($posts);die();
 //         return json_encode($posts);
-         return $activeData;
+         $response=[
+               "success"=>true,
+               "message"=>"posts returned successfully ",
+               "errors"=>[],
+               "data"=>$activeData
+
+
+       ];
+         return $response;
 
      }
    public function actionCreate($title,$price,$make_id,$model_id,$city_id,$status,$is_new)
@@ -86,12 +95,33 @@ class ApiController extends controller
        $post->city_id=$city_id;
        $post->status=$status;
        $post->is_new=$is_new;
-
        if($post->save())
-           return "post has been created";
-       else
-           return "problem while creating";
+       {
+           $response=[
+               "success"=>true,
+               "message"=>"post created successfully ",
+               "errors"=>[],
 
+
+
+           ];
+           return $response;
+       }
+       else
+       {
+           $response=[
+               "success"=>false,
+               "message"=>"post could not be craeted ",
+               "errors"=>[
+                   "code"=>500,
+                   "message"=>"server error"
+               ],
+
+
+
+           ];
+           return $response;
+       }
 
    }
 
@@ -99,17 +129,40 @@ class ApiController extends controller
    {
        $post=Post::find()->where(["id"=>$id])->one();
 
-       if($post->delete())
-           return "post has been deleted";
+       if($post)
+       {
+           $post->delete();
+           $response=[
+               "success"=>true,
+               "message"=>"post deleted successfully ",
+               "errors"=>[],
+
+
+
+           ];
+           return $response;
+       }
        else
-           return "problem while deleting a post";
+       {
+           $response=[
+               "success"=>false,
+               "message"=>"post could not be deleted ",
+               "errors"=>[
+                   "code"=>500,
+                   "message"=>"server error"
+               ],
+
+
+
+           ];
+           return $response;
+       }
 
    }
 
    public function actionUpdate($id,$title,$price,$make_id,$model_id,$city_id,$status,$is_new)
    {
        $post=Post::find()->where(["id"=>$id])->one();
-//       return var_dump($post);
        $post->title=$title;
        $post->price=$price;
        $post->make_id=$make_id;
@@ -118,8 +171,28 @@ class ApiController extends controller
        $post->status=$status;
        $post->is_new=$is_new;
        if($post->save())
-           return "post has been updated";
-       else
-           return "problem while updating";
+       {
+           $response=[
+               "success"=>true,
+               "message"=>"post updated successfully ",
+               "errors"=>[],
+
+           ];
+           return $response;
+       }
+       else {
+           $response=[
+               "success"=>false,
+               "message"=>"post could not be updated ",
+               "errors"=>[
+                   "code"=>500,
+                   "message"=>"server error"
+               ],
+
+
+
+           ];
+           return $response;;
+       }
    }
 }
