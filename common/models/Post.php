@@ -110,9 +110,9 @@ class Post extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['title', 'make_id', 'model_id', 'city_id','price','status','image'], 'required'],
-            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status','image'], 'required','on'=>self::SCENARIO_CREATE],
-            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status','image'], 'required','on'=>self::SCENARIO_UPDATE],
+            [['title', 'make_id', 'model_id', 'city_id','price','status'], 'required'],
+            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_CREATE],
+            [['title', 'make_id', 'model_id', 'city_id','price','is_new','status'], 'required','on'=>self::SCENARIO_UPDATE],
 
             [['make_id', 'model_id', 'city_id', 'status', 'created_by','price'], 'integer'],
             [['created_at', 'updated_at','is_new'], 'safe'],

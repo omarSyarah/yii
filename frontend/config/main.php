@@ -95,7 +95,7 @@ return [
 //                'OPTIONS v1/user/login' => 'v1/user/login',
 //                'POST v1/user/login' => 'v1/user/login',
            'GET api/index' => 'api/index',
-           'POST api/create' => 'api/create',
+           'POST,GET api/create' => 'api/create',
            'POST api/delete' => 'api/delete',
            'PUT,PATCH api/index' => 'api/index',
 //           'DELETE api/delete' => 'api/delete',
